@@ -5,7 +5,7 @@ export default function ThumbnailPreview({ s, prf }) {
   const overlay = SCENE_OVERLAYS[s.scene] || SCENE_OVERLAYS.explosion;
   const glowC   = s.glowColor            || "#7c3aed";
   const textC   = s.mainTextColor        || "#ffffff";
-  const faceLeft  = s.charPosition==="left"?"8%":s.charPosition==="center"?"35%":"auto";
+  const faceLeft  = s.charPosition==="left"?"8%":s.charPosition==="center"?"50%":"auto";
   const faceRight = s.charPosition==="right"?"8%":"auto";
   const particles = s.particlesEnabled
     ? Array.from({length:14},(_,i)=>({
