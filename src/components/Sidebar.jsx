@@ -1,9 +1,9 @@
 
-export default function Sidebar({ open, setOpen, page, setPage, characterName }) {
+export default function Sidebar({ open, setOpen, page, setPage, navItems, characterName }) {
   return (
     <div className={`sidebar ${open?"open":""}`}>
       <div className="sidebar-logo">{characterName?characterName.slice(0,1):"A"}</div>
-      {NAV_ITEMS.map(n=>(
+      {navItems.map(n=>(
         <div key={n.id} className={`nav-item ${page===n.id?"active":""}`} onClick={()=>setPage(n.id)}>
           <span className="nav-icon">{n.icon}</span>
           {open&&<span>{n.label}</span>}

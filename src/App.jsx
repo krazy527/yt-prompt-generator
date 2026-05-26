@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { buildPrompt, calcCTR } from "./constants";
-import CTRMeter from "./components/ui/CTRMeter";
 import { CSS } from "./styles/css";
-import ThumbnailPreview from "./components/thumbnail/ThumbnailPreview";
-import LayerPanel from "./components/thumbnail/LayerPanel";
-import PropertiesPanel from "./components/thumbnail/PropertiesPanel";
-import { LayoutDashboard, Image as ImageIcon, BookOpen, Download, Upload, RotateCcw, Copy, Check, ChevronLeft, ChevronRight } from "lucide-react";
+import { LayoutDashboard, Image as ImageIcon, BookOpen, Copy, ChevronLeft, ChevronRight } from "lucide-react";
+import Sidebar from "./components/Sidebar";
+import ThumbnailScreen from "./components/screens/ThumbnailScreen";
+import ProfileScreen from "./components/screens/ProfileScreen";
+import GuideScreen from "./components/screens/GuideScreen";
 import TitleDescriptionScreen from "./components/screens/TitleDescriptionScreen";
 import TagsScreen from "./components/screens/TagsScreen";
 
@@ -131,158 +131,42 @@ export default function App() {
       <style>{CSS}</style>
       <div className="app">
 
-        {/* SIDEBAR */}
-        <div className={`sidebar ${sbOpen?"open":""}`}>
-          <div className="sidebar-logo">
-            {sbOpen ? <span>TGEN</span> : "T"}
-          </div>
-          {NAV.map(n=>(
-            <div key={n.id} className={`nav-item ${page===n.id?"active":""}`} onClick={()=>setPage(n.id)}>
-              <span className="nav-icon">{n.icon}</span>
-              {sbOpen && <span>{n.label}</span>}
-            </div>
-          ))}
-          <button className="toggle-btn" onClick={()=>setSbOpen(x=>!x)}>
-            {sbOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
-          </button>
-        </div>
+        <Sidebar
+          open={sbOpen}
+          setOpen={setSbOpen}
+          page={page}
+          setPage={setPage}
+          navItems={NAV}
+          characterName={profile.channelName || "T"}
+        />
 
         <div className="main">
-          {/* ══════════ THUMBNAIL PAGE ══════════ */}
           {page==="thumbnail" && (
-            <>
-              <div className="page-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
-                <div>
-                  <div className="page-title">THUMBNAIL ENGINE</div>
-                  <div className="page-sub">Layer-based builder & Smart Prompt generator</div>
-                </div>
-                
-                <div style={{ display: "flex", alignItems: "center", gap: 12, background: "var(--card2)", padding: "4px 8px", borderRadius: 8, border: "1px solid var(--border)" }}>
-                  <span style={{ fontSize: 12, fontWeight: 500, color: "var(--muted)", paddingLeft: 8 }}>Layout:</span>
-                  <div className="seg-control" style={{ border: "none", background: "transparent" }}>
-                    {["single","dual","multi"].map(v => (
-                      <button key={v} className={`seg-btn ${projectSettings.layoutType===v?"active":""}`} onClick={()=>setProjectSettings({layoutType: v})} style={{ textTransform: "capitalize", padding: "4px 10px" }}>{v}</button>
-                    ))}
-                  </div>
-                </div>
-
-                <div style={{ display: "flex", gap: 12 }}>
-                  <button className="btn btn-ghost" onClick={() => document.getElementById('import-json').click()}>
-                    <Upload size={16} /> Import
-                  </button>
-                  <input type="file" id="import-json" style={{ display: "none" }} accept=".json" onChange={handleImport} />
-                  <button className="btn btn-ghost" onClick={handleExport}>
-                    <Download size={16} /> Export Preset
-                  </button>
-                  <button className="btn btn-primary" onClick={() => { setLayers(DEFAULT_LAYERS); showToast("🔄 Workspace Reset"); }}>
-                    <RotateCcw size={16} /> Reset
-                  </button>
-                </div>
-              </div>
-
-              <div className="tgen-grid">
-                {/* LEFT COLUMN: SCROLLABLE */}
-                <LayerPanel 
-                  layers={layers} 
-                  setLayers={setLayers} 
-                  activeLayerId={activeLayerId} 
-                  setActiveLayerId={setActiveLayerId} 
-                />
-
-                {/* CENTER COLUMN: CANVAS + PROMPT */}
-                <div className="center-column">
-                  <div className="preview-wrap">
-                    <ThumbnailPreview layers={layers} prf={prf}/>
-                    <CTRMeter score={ctr}/>
-                  </div>
-
-                  <div className="card" style={{ flexShrink: 0 }}>
-                    <div className="card-title">Smart AI Prompt Output</div>
-                    <div className="prompt-box">
-                      {prompt.split("\\n").map((line,i)=>{
-                        if (!line.trim()) return <br key={i}/>;
-                        return (
-                          <div key={i}>
-                            {line.split(/(\*\*[^*]+\*\*)/g).map((p,j)=>
-                              p.startsWith("**")&&p.endsWith("**")
-                                ? <span key={j} className="kw">{p.slice(2,-2)}</span>
-                                : <span key={j}>{p}</span>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                    <div style={{marginTop:16}}>
-                      <button className="btn btn-primary" onClick={()=>{
-                        navigator.clipboard.writeText(prompt.replace(/\\*\\*/g,"")).then(()=>showToast("✅ Prompt copied!"));
-                      }}><Copy size={16} /> Copy Full Prompt</button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* RIGHT COLUMN: SCROLLABLE */}
-                <PropertiesPanel 
-                  layer={activeLayer} 
-                  updateLayer={updateLayer} 
-                />
-              </div>
-            </>
+            <ThumbnailScreen
+              layers={layers}
+              setLayers={setLayers}
+              activeLayerId={activeLayerId}
+              setActiveLayerId={setActiveLayerId}
+              activeLayer={activeLayer}
+              updateLayer={updateLayer}
+              prf={prf}
+              prompt={prompt}
+              ctr={ctr}
+              projectSettings={projectSettings}
+              setProjectSettings={setProjectSettings}
+              handleImport={handleImport}
+              handleExport={handleExport}
+              onReset={() => { setLayers(DEFAULT_LAYERS); showToast("🔄 Workspace Reset"); }}
+              showToast={showToast}
+            />
           )}
 
-          {/* ══════════ PROFILE PAGE ══════════ */}
           {page==="dashboard" && (
-            <>
-              <div className="page-header">
-                <div className="page-title">CHANNEL PROFILE</div>
-                <div className="page-sub">Used across all prompts and branding elements</div>
-              </div>
-              <div style={{maxWidth:600}}>
-                <div className="card">
-                  <div className="card-title">Profile Setup</div>
-                  {[
-                    {key:"channelName",  label:"Channel Name",     ph:"DRONE AISHU GAMING"},
-                    {key:"characterName",label:"Character / Alias", ph:"AISHU"},
-                    {key:"channelUrl",   label:"Channel URL",       ph:"youtube.com/@..."},
-                  ].map(f=>(
-                    <div key={f.key} className="field">
-                      <div className="field-label">{f.label}</div>
-                      <input type="text" value={profile[f.key]||""} placeholder={f.ph}
-                        onChange={e=>setProfile(p=>({...p,[f.key]:e.target.value}))}/>
-                    </div>
-                  ))}
-                  <button className="btn btn-primary" style={{marginTop:16}} onClick={()=>{
-                    localStorage.setItem("tgen_profile",JSON.stringify(profile));
-                    showToast("✅ Profile saved!");
-                  }}><Check size={16} /> Save Profile</button>
-                </div>
-              </div>
-            </>
+            <ProfileScreen profile={profile} setProfile={setProfile} showToast={showToast} />
           )}
 
-          {/* ══════════ GUIDE PAGE ══════════ */}
           {page==="guide" && (
-            <>
-              <div className="page-header">
-                <div className="page-title">PROMPT GUIDE</div>
-                <div className="page-sub">Turn generated prompts into real thumbnails</div>
-              </div>
-              <div style={{maxWidth:720,display:"flex",flexDirection:"column",gap:20}}>
-                {[
-                  {title:"AI Tools to use",content:[
-                    "🎨 Midjourney — Best cinematic quality. /imagine [prompt] --ar 16:9 --v 6",
-                    "🖼 Leonardo AI — Free tier. Use 'Lightning XL' model.",
-                    "💬 ChatGPT DALL·E 3 — Paste short prompt. Say '16:9 YouTube gaming thumbnail'.",
-                  ]}
-                ].map((sec,i)=>(
-                  <div key={i} className="card">
-                    <div className="card-title">{sec.title}</div>
-                    {sec.content.map((c,j)=>(
-                      <div key={j} style={{padding:"8px 0",borderBottom:"1px solid var(--border)",fontSize:14,lineHeight:1.6,color:"var(--text)"}}>{c}</div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </>
+            <GuideScreen />
           )}
 
           {/* ══════════ TITLE / DESCRIPTION PAGE ══════════ */}
