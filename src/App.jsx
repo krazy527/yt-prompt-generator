@@ -6,6 +6,8 @@ import ThumbnailPreview from "./components/thumbnail/ThumbnailPreview";
 import LayerPanel from "./components/thumbnail/LayerPanel";
 import PropertiesPanel from "./components/thumbnail/PropertiesPanel";
 import { LayoutDashboard, Image as ImageIcon, BookOpen, Download, Upload, RotateCcw, Copy, Check, ChevronLeft, ChevronRight } from "lucide-react";
+import TitleDescriptionScreen from "./components/screens/TitleDescriptionScreen";
+import TagsScreen from "./components/screens/TagsScreen";
 
 // Default layers for a new project
 const DEFAULT_LAYERS = [
@@ -59,10 +61,19 @@ export default function App() {
     return { layoutType: "single" };
   });
 
+  const [videoTitle, setVideoTitle] = useState(() => localStorage.getItem("tgen_video_title") || "");
+  const [videoDescription, setVideoDescription] = useState(() => localStorage.getItem("tgen_video_description") || "");
+  const [videoTags, setVideoTags] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("tgen_video_tags")) || []; } catch { return []; }
+  });
+
   useEffect(() => {
     localStorage.setItem("tgen_layers", JSON.stringify(layers));
     localStorage.setItem("tgen_settings", JSON.stringify(projectSettings));
-  }, [layers, projectSettings]);
+    localStorage.setItem("tgen_video_title", videoTitle);
+    localStorage.setItem("tgen_video_description", videoDescription);
+    localStorage.setItem("tgen_video_tags", JSON.stringify(videoTags));
+  }, [layers, projectSettings, videoTitle, videoDescription, videoTags]);
 
   const showToast = msg => {
     clearTimeout(toastRef.current);
@@ -82,6 +93,8 @@ export default function App() {
     {id:"thumbnail", icon: <ImageIcon size={20} />, label:"Thumbnail"},
     {id:"dashboard", icon: <LayoutDashboard size={20} />, label:"Profile"},
     {id:"guide",     icon: <BookOpen size={20} />, label:"Guide"},
+    {id:"meta",      icon: <Copy size={20} />, label:"Title / Description"},
+    {id:"tags",      icon: <Copy size={20} />, label:"Tags"},
   ];
 
   const handleExport = () => {
@@ -270,6 +283,26 @@ export default function App() {
                 ))}
               </div>
             </>
+          )}
+
+          {/* ══════════ TITLE / DESCRIPTION PAGE ══════════ */}
+          {page==="meta" && (
+            <TitleDescriptionScreen
+              title={videoTitle}
+              setTitle={setVideoTitle}
+              description={videoDescription}
+              setDescription={setVideoDescription}
+              showToast={showToast}
+            />
+          )}
+
+          {/* ══════════ TAGS PAGE ══════════ */}
+          {page==="tags" && (
+            <TagsScreen
+              tags={videoTags}
+              setTags={setVideoTags}
+              showToast={showToast}
+            />
           )}
 
         </div>
