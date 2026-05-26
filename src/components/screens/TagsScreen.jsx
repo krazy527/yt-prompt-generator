@@ -26,14 +26,16 @@ export default function TagsScreen({ tags, setTags, showToast, profile }) {
     addTag(result);
   };
 
-  const tagsPrompt = `Generate 15-20 relevant YouTube tags for a ${profile?.characterName || 'gaming'} video.
+  const tagsPrompt = `Generate 15-20 relevant YouTube tags for a ${profile?.niche || 'gaming'} video.
 Channel name: ${profile?.channelName || 'Gaming Channel'}
+Niche/Category: ${profile?.niche || 'Gaming'}
+Creator: ${profile?.characterName || 'default'}
 Separate each tag with a comma.
 Include a mix of:
-- Specific content keywords
-- General gaming tags
+- Specific ${profile?.niche?.toLowerCase() || 'gaming'} keywords
+- General category tags
 - Channel brand tags
-- Trending keywords
+- Trending keywords related to ${profile?.niche || 'gaming'}
 Return ONLY the tags separated by commas, no explanations.`;
 
   return (
@@ -54,7 +56,7 @@ Return ONLY the tags separated by commas, no explanations.`;
               <AIGenerateButton
                 prompt={tagsPrompt}
                 onGenerate={generateTags}
-                label="✨ Generate"
+                label="Generate"
                 showToast={showToast}
               />
             </div>

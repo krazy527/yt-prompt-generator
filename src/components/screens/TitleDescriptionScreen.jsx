@@ -18,19 +18,23 @@ export default function TitleDescriptionScreen({ title, setTitle, description, s
     setDescription(result);
   };
 
-  const titlePrompt = `Generate a catchy and engaging YouTube video title for a ${profile?.characterName || 'gaming'} channel. 
+  const titlePrompt = `Generate a catchy and engaging YouTube video title for a ${profile?.niche || 'gaming'} channel. 
 Make it 5-7 words, attention-grabbing, and include power words. 
 Channel: ${profile?.channelName || 'Gaming Channel'}
+Character/Style: ${profile?.characterName || 'default'}
+Niche: ${profile?.niche || 'Gaming'}
 Return only the title, no quotes or explanations.`;
 
-  const descriptionPrompt = `Generate a YouTube video description for a ${profile?.characterName || 'gaming'} channel.
+  const descriptionPrompt = `Generate a YouTube video description for a ${profile?.niche || 'gaming'} channel.
+Channel: ${profile?.channelName || 'Gaming Channel'}
+Character: ${profile?.characterName || 'default'}
+Niche: ${profile?.niche || 'Gaming'}
 Include:
-- Hook (first line to grab attention)
+- Hook (first line to grab attention for ${profile?.niche || 'this'} content)
 - What the video is about
 - Call to action
-- Hashtags
-Keep it under 500 words.
-Channel: ${profile?.channelName || 'Gaming Channel'}`;
+- Relevant hashtags for ${profile?.niche || 'gaming'}
+Keep it under 500 words.`;
 
   return (
     <>
@@ -49,7 +53,7 @@ Channel: ${profile?.channelName || 'Gaming Channel'}`;
           <AIGenerateButton
             prompt={titlePrompt}
             onGenerate={generateTitle}
-            label="✨ Generate Title"
+            label="Generate Title"
             showToast={showToast}
           />
         </div>
@@ -63,7 +67,7 @@ Channel: ${profile?.channelName || 'Gaming Channel'}`;
               <AIGenerateButton
                 prompt={descriptionPrompt}
                 onGenerate={generateDescription}
-                label="✨ Generate"
+                label="Generate"
                 showToast={showToast}
               />
             </div>

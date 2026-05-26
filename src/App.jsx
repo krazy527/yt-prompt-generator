@@ -20,7 +20,7 @@ export default function App() {
   const [profile, setProfile] = useState(()=>{
     try{return JSON.parse(localStorage.getItem("tgen_profile"))||{};}catch{return {};}
   });
-  const prf = {channelName:"DRONE AISHU GAMING",characterName:"AISHU",channelUrl:"",...profile};
+  const prf = {channelName:"DRONE AISHU GAMING",characterName:"AISHU",channelUrl:"",niche:"Gaming",...profile};
 
   const [layers, setLayers] = useState(() => {
     try {
@@ -48,10 +48,11 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem("tgen_layers", JSON.stringify(layers));
     localStorage.setItem("tgen_settings", JSON.stringify(projectSettings));
+    localStorage.setItem("tgen_profile", JSON.stringify(profile));
     localStorage.setItem("tgen_video_title", videoTitle);
     localStorage.setItem("tgen_video_description", videoDescription);
     localStorage.setItem("tgen_video_tags", JSON.stringify(videoTags));
-  }, [layers, projectSettings, videoTitle, videoDescription, videoTags]);
+  }, [layers, projectSettings, profile, videoTitle, videoDescription, videoTags]);
 
   const showToast = msg => {
     clearTimeout(toastRef.current);

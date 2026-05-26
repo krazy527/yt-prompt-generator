@@ -4,6 +4,24 @@ const PROFILE_FIELDS = [
   { key:"channelUrl",   label:"Channel URL",       placeholder:"youtube.com/@..." },
 ];
 
+const CHANNEL_NICHES = [
+  "Gaming",
+  "Education",
+  "Finance",
+  "Technology",
+  "Lifestyle",
+  "Entertainment",
+  "Music",
+  "Sports",
+  "Health & Fitness",
+  "Travel",
+  "Food & Cooking",
+  "Art & Design",
+  "Business",
+  "Comedy",
+  "News & Politics",
+];
+
 export default function ProfileScreen({ profile, setProfile, showToast }) {
   const handleSave = () => {
     localStorage.setItem("tgen_profile", JSON.stringify(profile));
@@ -30,6 +48,19 @@ export default function ProfileScreen({ profile, setProfile, showToast }) {
               />
             </div>
           ))}
+          <div className="field" style={{ marginBottom: 16 }}>
+            <div className="field-label">Channel Niche / Type</div>
+            <select
+              value={profile.niche || ""}
+              onChange={e => setProfile(prev => ({ ...prev, niche: e.target.value }))}
+              style={{ width: "100%" }}
+            >
+              <option value="">Select a niche...</option>
+              {CHANNEL_NICHES.map(niche => (
+                <option key={niche} value={niche}>{niche}</option>
+              ))}
+            </select>
+          </div>
           <button className="btn btn-primary" style={{ marginTop: 16 }} onClick={handleSave}>Save Profile</button>
         </div>
       </div>
