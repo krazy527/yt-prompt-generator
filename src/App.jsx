@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { buildPrompt, calcCTR, DEFAULT_LAYERS } from "./constants";
 import { CSS } from "./styles/css";
-import { LayoutDashboard, Image as ImageIcon, BookOpen, Copy, ChevronLeft, ChevronRight, Settings } from "lucide-react";
+import { LayoutDashboard, Image as ImageIcon, BookOpen, Newspaper, ChevronLeft, ChevronRight, Settings, Tags } from "lucide-react";
 import Sidebar from "./components/Sidebar";
 import AISettingsModal from "./components/AISettingsModal";
 import ThumbnailScreen from "./components/screens/ThumbnailScreen";
@@ -69,10 +69,10 @@ export default function App() {
   const activeLayer = layers.find(l => l.id === activeLayerId);
   const NAV = [
     {id:"thumbnail", icon: <ImageIcon size={20} />, label:"Thumbnail"},
+    {id:"meta",      icon: <Newspaper size={20} />, label:"Title / Description"},
+    {id:"tags",      icon: <Tags size={20} />, label:"Tags"},
     {id:"dashboard", icon: <LayoutDashboard size={20} />, label:"Profile"},
     {id:"guide",     icon: <BookOpen size={20} />, label:"Guide"},
-    {id:"meta",      icon: <Copy size={20} />, label:"Title / Description"},
-    {id:"tags",      icon: <Copy size={20} />, label:"Tags"},
     {id:"ai-settings", icon: <Settings size={20} />, label:"AI Settings", action: () => setShowAISettings(true), isAction: true},
   ];
 
