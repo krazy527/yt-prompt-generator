@@ -1,3 +1,27 @@
+// Default layers for a new project
+export const DEFAULT_LAYERS = [
+  {
+    id: "bg-1", type: "background", name: "Main Background", visible: true,
+    src: null, brightness: 0.5, blur: true, opacity: 1, zIndex: 0
+  },
+  {
+    id: "effect-1", type: "effect", name: "Vignette", visible: true,
+    effectType: "vignette", color: "#000000", opacity: 1, zIndex: 1
+  },
+  {
+    id: "effect-2", type: "effect", name: "Particles", visible: true,
+    effectType: "particles", color: "#ec4899", opacity: 1, zIndex: 2
+  },
+  {
+    id: "image-1", type: "image", name: "Character Face", visible: true,
+    src: null, x: 50, y: 50, width: 300, height: 300, opacity: 1, glow: true, glowColor: "#7c3aed", zIndex: 5
+  },
+  {
+    id: "text-1", type: "text", name: "Main Title", visible: true,
+    content: "INSANE\\nCLUTCH", color: "#ffffff", stroke: "#000000", shadow: true, x: 50, y: 80, fontSize: 100, opacity: 1, zIndex: 10
+  }
+];
+
 
 export const SCENES = {
   explosion: { bg:"linear-gradient(135deg,#0d0005 0%,#2d0520 30%,#1a0a00 60%,#0d0000 100%)", accent:"#ff4400" },

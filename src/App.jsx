@@ -1,42 +1,20 @@
 import { useState, useRef, useEffect } from "react";
-import { buildPrompt, calcCTR } from "./constants";
+import { buildPrompt, calcCTR, DEFAULT_LAYERS } from "./constants";
 import { CSS } from "./styles/css";
-import { LayoutDashboard, Image as ImageIcon, BookOpen, Copy, ChevronLeft, ChevronRight } from "lucide-react";
+import { LayoutDashboard, Image as ImageIcon, BookOpen, Copy, ChevronLeft, ChevronRight, Settings } from "lucide-react";
 import Sidebar from "./components/Sidebar";
+import AISettingsModal from "./components/AISettingsModal";
 import ThumbnailScreen from "./components/screens/ThumbnailScreen";
 import ProfileScreen from "./components/screens/ProfileScreen";
 import GuideScreen from "./components/screens/GuideScreen";
 import TitleDescriptionScreen from "./components/screens/TitleDescriptionScreen";
 import TagsScreen from "./components/screens/TagsScreen";
 
-// Default layers for a new project
-const DEFAULT_LAYERS = [
-  {
-    id: "bg-1", type: "background", name: "Main Background", visible: true,
-    src: null, brightness: 0.5, blur: true, opacity: 1, zIndex: 0
-  },
-  {
-    id: "effect-1", type: "effect", name: "Vignette", visible: true,
-    effectType: "vignette", color: "#000000", opacity: 1, zIndex: 1
-  },
-  {
-    id: "effect-2", type: "effect", name: "Particles", visible: true,
-    effectType: "particles", color: "#ec4899", opacity: 1, zIndex: 2
-  },
-  {
-    id: "image-1", type: "image", name: "Character Face", visible: true,
-    src: null, x: 50, y: 50, width: 300, height: 300, opacity: 1, glow: true, glowColor: "#7c3aed", zIndex: 5
-  },
-  {
-    id: "text-1", type: "text", name: "Main Title", visible: true,
-    content: "INSANE\\nCLUTCH", color: "#ffffff", stroke: "#000000", shadow: true, x: 50, y: 80, fontSize: 100, opacity: 1, zIndex: 10
-  }
-];
-
 export default function App() {
   const [sbOpen, setSbOpen] = useState(false);
   const [page, setPage]     = useState("thumbnail");
   const [toast, setToast]   = useState(null);
+  const [showAISettings, setShowAISettings] = useState(false);
   const toastRef            = useRef(null);
 
   const [profile, setProfile] = useState(()=>{
@@ -88,13 +66,13 @@ export default function App() {
   const prompt = buildPrompt(layers, prf, projectSettings);
   const ctr    = calcCTR(layers, projectSettings);
   const activeLayer = layers.find(l => l.id === activeLayerId);
-
   const NAV = [
     {id:"thumbnail", icon: <ImageIcon size={20} />, label:"Thumbnail"},
     {id:"dashboard", icon: <LayoutDashboard size={20} />, label:"Profile"},
     {id:"guide",     icon: <BookOpen size={20} />, label:"Guide"},
     {id:"meta",      icon: <Copy size={20} />, label:"Title / Description"},
     {id:"tags",      icon: <Copy size={20} />, label:"Tags"},
+    {id:"ai-settings", icon: <Settings size={20} />, label:"AI Settings", action: () => setShowAISettings(true), isAction: true},
   ];
 
   const handleExport = () => {
@@ -140,6 +118,8 @@ export default function App() {
           characterName={profile.channelName || "T"}
         />
 
+        <AISettingsModal isOpen={showAISettings} onClose={() => setShowAISettings(false)} onSave={() => showToast('✅ AI settings saved!')} />
+
         <div className="main">
           {page==="thumbnail" && (
             <ThumbnailScreen
@@ -177,6 +157,7 @@ export default function App() {
               description={videoDescription}
               setDescription={setVideoDescription}
               showToast={showToast}
+              profile={prf}
             />
           )}
 
@@ -186,6 +167,7 @@ export default function App() {
               tags={videoTags}
               setTags={setVideoTags}
               showToast={showToast}
+              profile={prf}
             />
           )}
 

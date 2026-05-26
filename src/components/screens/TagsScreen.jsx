@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Copy } from "lucide-react";
+import { AIGenerateButton } from "../AIGenerateButton";
 
-export default function TagsScreen({ tags, setTags, showToast }) {
+export default function TagsScreen({ tags, setTags, showToast, profile }) {
   const [input, setInput] = useState("");
 
   const addTag = (t) => {
@@ -21,6 +22,20 @@ export default function TagsScreen({ tags, setTags, showToast }) {
     navigator.clipboard.writeText(text).then(() => showToast("✅ Tags copied!"));
   };
 
+  const generateTags = async (result) => {
+    addTag(result);
+  };
+
+  const tagsPrompt = `Generate 15-20 relevant YouTube tags for a ${profile?.characterName || 'gaming'} video.
+Channel name: ${profile?.channelName || 'Gaming Channel'}
+Separate each tag with a comma.
+Include a mix of:
+- Specific content keywords
+- General gaming tags
+- Channel brand tags
+- Trending keywords
+Return ONLY the tags separated by commas, no explanations.`;
+
   return (
     <>
       <div className="page-header">
@@ -36,6 +51,12 @@ export default function TagsScreen({ tags, setTags, showToast }) {
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               <button className="btn btn-primary" onClick={() => addTag(input)}>Add</button>
               <button className="btn btn-ghost" onClick={copyTags}><Copy size={14} /> Copy All</button>
+              <AIGenerateButton
+                prompt={tagsPrompt}
+                onGenerate={generateTags}
+                label="✨ Generate"
+                showToast={showToast}
+              />
             </div>
           </div>
 

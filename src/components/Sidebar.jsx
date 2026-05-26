@@ -4,7 +4,7 @@ export default function Sidebar({ open, setOpen, page, setPage, navItems, charac
     <div className={`sidebar ${open?"open":""}`}>
       <div className="sidebar-logo">{characterName?characterName.slice(0,1):"A"}</div>
       {navItems.map(n=>(
-        <div key={n.id} className={`nav-item ${page===n.id?"active":""}`} onClick={()=>setPage(n.id)}>
+        <div key={n.id} className={`nav-item ${page===n.id?"active":""}`} onClick={()=> n.isAction ? n.action?.() : setPage(n.id)}>
           <span className="nav-icon">{n.icon}</span>
           {open&&<span>{n.label}</span>}
         </div>
