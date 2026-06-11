@@ -32,7 +32,7 @@ https://yt-prompt-generator.onrender.com/
 
 ### AI
 
-* Google Gemini API
+* Paste free API Key and You are Good to GO!
 
 ### Deployment
 
@@ -71,14 +71,12 @@ npm run dev
 * Thumbnail Image Generation
 * Prompt History
 * Multiple Content Styles
-* Multi-language Support
 * Saved Templates
+* Import and Export Layouts and Settings
 
 ## 👨‍💻 Author
 
 Karan Yadav
-
-Senior Frontend Developer
 
 ## 📄 License
 
