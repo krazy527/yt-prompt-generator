@@ -68,6 +68,7 @@ input[type=text],input[type=password],input[type=number],textarea,select{width:1
 input:focus,textarea:focus,select:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(124,58,237,.1);}
 select{appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right 12px center;background-size:16px;}
 select option{background:var(--card);}
+textarea{resize:vertical;}
 
 .seg-control{display:flex;gap:4px;background:var(--card2);border-radius:8px;padding:4px;border:1px solid var(--border);}
 .seg-btn{flex:1;padding:8px;border-radius:6px;border:none;background:none;color:var(--muted);cursor:pointer;font-size:12px;font-weight:500;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;}

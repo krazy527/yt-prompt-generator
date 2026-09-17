@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { buildPrompt, calcCTR, DEFAULT_LAYERS } from "./constants";
 import { CSS } from "./styles/css";
-import { LayoutDashboard, Image as ImageIcon, BookOpen, Newspaper, ChevronLeft, ChevronRight, Settings, Tags } from "lucide-react";
+import { LayoutDashboard, Image as ImageIcon, BookOpen, Newspaper, ChevronLeft, ChevronRight, Settings, Tags, Scissors } from "lucide-react";
 import Sidebar from "./components/Sidebar";
 import AISettingsModal from "./components/AISettingsModal";
 import ThumbnailScreen from "./components/screens/ThumbnailScreen";
+import ShortsCutScreen from "./components/screens/ShortsCutScreen";
 import ProfileScreen from "./components/screens/ProfileScreen";
 import GuideScreen from "./components/screens/GuideScreen";
 import TitleDescriptionScreen from "./components/screens/TitleDescriptionScreen";
@@ -69,6 +70,7 @@ export default function App() {
   const activeLayer = layers.find(l => l.id === activeLayerId);
   const NAV = [
     {id:"thumbnail", icon: <ImageIcon size={20} />, label:"Thumbnail"},
+    {id:"shorts", icon: <Scissors size={20} />, label:"Shorts Cut"},
     {id:"meta",      icon: <Newspaper size={20} />, label:"Title / Description"},
     {id:"tags",      icon: <Tags size={20} />, label:"Tags"},
     {id:"dashboard", icon: <LayoutDashboard size={20} />, label:"Profile"},
@@ -140,6 +142,10 @@ export default function App() {
               onReset={() => { setLayers(DEFAULT_LAYERS); showToast("🔄 Workspace Reset"); }}
               showToast={showToast}
             />
+          )}
+
+          {page==="shorts" && (
+            <ShortsCutScreen showToast={showToast} />
           )}
 
           {page==="dashboard" && (
