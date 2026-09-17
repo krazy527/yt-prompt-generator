@@ -6,6 +6,7 @@ import { spawn } from 'child_process';
 import multer from 'multer';
 import ffmpegPath from 'ffmpeg-static';
 import youtubedl from 'youtube-dl-exec';
+import { resolveDownloadedSourcePath } from './sourcePathResolver.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -124,6 +125,11 @@ app.post(
                     }
 
                     await youtubedl(videoUrl, dlOptions);
+                    const tmpFiles = await fs.readdir(TMP_DIR);
+                    const resolvedSourcePath = resolveDownloadedSourcePath(TMP_DIR, tmpFiles, sourcePath);
+                    if (resolvedSourcePath) {
+                        sourcePath = resolvedSourcePath;
+                    }
                 } catch (error) {
                     console.error('YouTube download error:', error);
                     return res.status(400).json({
@@ -139,9 +145,16 @@ app.post(
             try {
                 await fs.access(sourcePath);
             } catch {
-                return res
-                    .status(400)
-                    .json({ error: 'Source video could not be found for clipping.' });
+                const tmpFiles = await fs.readdir(TMP_DIR);
+                const resolvedSourcePath = resolveDownloadedSourcePath(TMP_DIR, tmpFiles, sourcePath);
+
+                if (!resolvedSourcePath) {
+                    return res
+                        .status(400)
+                        .json({ error: 'Source video could not be found for clipping.' });
+                }
+
+                sourcePath = resolvedSourcePath;
             }
 
             await new Promise((resolve, reject) => {
